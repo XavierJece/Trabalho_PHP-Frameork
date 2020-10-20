@@ -31,7 +31,7 @@ final class AuthController
             'sub' => $user->getId(),
             'name' => $user->getName(),
             'email' => $user->getEmail(),
-            'exp' => (new \DateTime())->getTimestamp()
+            'expiredAt' => ((new \DateTime())->modify('+2 day'))->format('Y-m-d H:i:s'),
         ];
 
         $token = JWT::encode($tokenPayload, getenv('JWT_SECRET_KEY'));

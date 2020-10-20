@@ -2,6 +2,11 @@
 
 namespace App\DAO\MySQL\DoubtNo;
 
+use App\Models\MySQL\DoubtNo\{
+    PostModel,
+    UserModel
+};
+
 class PostDAO extends Connection
 {
     public function __construct()
@@ -16,7 +21,24 @@ class PostDAO extends Connection
                     *
                 FROM post;');
         $statement->execute();
-        $post = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $posts = $statement->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $posts;
+    }
+
+    public function insert(PostModel $post): PostModel
+    {
+        $statement = $this->pdo
+            ->prepare(
+                'INSERT INTO
+                    `post`(`id`, `doubt`, `user`, `date_post`)
+                VALUES
+                    ( :id, :doubt, :user, :date_post)');
+        $statement->bindValue(":id", $post->getId());
+        $statement->bindValue(":doubt", $post->getDoubt());
+        $statement->bindValue(":user", $post->getUser()->getId());
+        $statement->bindValue(":date_post", $post->getDate());
+        $statement->execute();
 
         return $post;
     }
