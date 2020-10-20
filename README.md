@@ -2,9 +2,11 @@
 
 Material do curso
 
-* Autor: Jecé Xavier Pereira Neto
-* E-mail: jece@alunos.utfpr.edu.br
+* Autor: Felipe Renan Vieira
+* E-mail: feliperenanvieira@gmail.com
 * Github: [https://github.com/frv-dev](https://github.com/frv-dev)
+* Site: [https://codeeasy.com.br](https://www.codeeasy.com.br)
+* Chat: [https://gitter.im/frv-dev/CodeEasy](https://gitter.im/frv-dev/CodeEasy)
 
 ## CONFIGURAÇÃO
 

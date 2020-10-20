@@ -2,7 +2,7 @@
 
 namespace src;
 
-use App\DAO\MySQL\CodeeasyGerenciadorDeLojas\LojasDAO;
+use App\DAO\MySQL\DoubtNo\UserDAO;
 
 function slimConfiguration(): \Slim\Container
 {
@@ -14,7 +14,7 @@ function slimConfiguration(): \Slim\Container
 
     $container = new \Slim\Container($configuration);
 
-    $container->offsetSet(LojasDAO::class, new LojasDAO());
+    $container->offsetSet(UserDAO::class, new UserDAO());
 
     return $container;
 }
