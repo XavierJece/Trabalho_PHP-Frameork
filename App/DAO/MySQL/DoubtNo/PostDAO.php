@@ -17,14 +17,26 @@ class PostDAO extends Connection
     public function getAll(): array
     {
         $statement = $this->pdo
-            ->prepare('SELECT
-                    *
-                FROM post;');
+            ->prepare('SELECT P.id As "postId", P.doubt, P.date_post AS "datePost", P.user AS "userId", U.name, U.avatar, U.email FROM post AS P JOIN user AS U ON (P.user = U.id) ORDER BY  P.date_post DESC;');
         $statement->execute();
         $posts = $statement->fetchAll(\PDO::FETCH_ASSOC);
 
         return $posts;
     }
+
+    public function getById(string $id): ?array
+    {
+        $statement = $this->pdo
+            ->prepare('SELECT P.id As "postId", P.doubt, P.date_post AS "datePost", P.user AS "userId", U.name, U.avatar, U.email FROM post AS P JOIN user AS U ON (P.user = U.id) WHERE P.id = :id');
+        $statement->bindParam('id', $id);
+        $statement->execute();
+        $posts= $statement->fetchAll(\PDO::FETCH_ASSOC);
+        if(count($posts) === 0)
+            return null;
+
+        return $posts[0];
+    }
+
 
     public function insert(PostModel $post): PostModel
     {
@@ -42,20 +54,4 @@ class PostDAO extends Connection
 
         return $post;
     }
-
-    // public function getAllProdutosFromLoja(int $lojaId): array
-    // {
-    //     $statement = $this->pdo
-    //         ->prepare('SELECT
-    //                 *
-    //             FROM produtos
-    //             WHERE
-    //                 loja_id = :loja_id
-    //         ;');
-    //     $statement->bindParam(':loja_id', $lojaId, \PDO::PARAM_INT);
-    //     $statement->execute();
-    //     $produtos = $statement->fetchAll(\PDO::FETCH_ASSOC);
-
-    //     return $produtos;
-    // }
 }

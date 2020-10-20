@@ -6,7 +6,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\DAO\MySQL\DoubtNo\PostDAO;
 use App\DAO\MySQL\DoubtNo\UserDAO;
+use App\DAO\MySQL\DoubtNo\CommentDAO;
 use App\Models\MySQL\DoubtNo\PostModel;
+use App\Models\MySQL\DoubtNo\UserModel;
 
 final class PostController
 {
@@ -15,7 +17,26 @@ final class PostController
         try{
             $postDAO = new PostDAO();
             $posts = $postDAO->getAll();
-            $response = $response->withJson($posts);
+
+            $postResponse = array();
+            foreach ($posts as $value){
+                $post = [
+                    'id' => $value['postId'],
+                    'doubt' => $value['doubt'],
+                    'date' => $value['datePost'],
+                    'user' => [
+                        'id' => $value['userId'],
+                        'email ' => $value['email'],
+                        'name' => $value['name'],
+                        'avatar' => $value['avatar'],
+                    ]
+                ];
+
+                array_push($postResponse, $post);
+
+            }
+
+            $response = $response->withJson($postResponse);
 
             return $response;
         }catch(\Exception | \Throwable $ex) {
@@ -62,6 +83,70 @@ final class PostController
 
     public function show(Request $request, Response $response, array $args): Response
     {
+        $postId = $args['postId'];
+
+        $postDAO = new PostDAO();
+        $commentDAO = new CommentDAO();
+        $dataPost = $postDAO->getById($postId);
+        $dataCommentsDads = $commentDAO->getByPost($postId);
+
+        $commentsDadResponse = array();
+        if(!is_null($dataCommentsDads)){
+            foreach ($dataCommentsDads as $value){
+                $dataCommentsChildren = $commentDAO->getChildren($value['commentId']);
+
+                $commentsChildrenResponse = array();
+                if(!is_null($dataCommentsDads)){
+                    foreach ($dataCommentsChildren as $value){
+                        $commentsChildren = [
+                            'id' => $value['commentId'],
+                            'content' => $value['content'],
+                            'date' => $value['commentDate'],
+                            'user' => [
+                                'id' => $value['userId'],
+                                'name' => $value['name'],
+                                'email' => $value['email'],
+                                'avatar' => $value['avatar']
+                            ]
+                        ];
+                        array_push($commentsChildrenResponse, $commentsChildren);
+                    }
+                }
+
+
+                $commentDad = [
+                    'id' => $value['commentId'],
+                    'content' => $value['content'],
+                    'date' => $value['commentDate'],
+                    'user' => [
+                        'id' => $value['userId'],
+                        'name' => $value['name'],
+                        'email' => $value['email'],
+                        'avatar' => $value['avatar']
+                    ],
+                    'commentsChildren' => $commentsChildrenResponse
+                ];
+
+                array_push($commentsDadResponse, $commentDad);
+
+            }
+        }
+
+        $postResponse = [
+            'id' => $dataPost['postId'],
+            'doubt' => $dataPost['doubt'],
+            'date' => $dataPost['datePost'],
+            'user' => [
+                'id' => $dataPost['userId'],
+                'email ' => $dataPost['email'],
+                'name' => $dataPost['name'],
+                'avatar' => $dataPost['avatar'],
+            ],
+            'comments' => $commentsDadResponse
+        ];
+
+        $response = $response->withJson($postResponse);
+
         return $response;
     }
 }
