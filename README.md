@@ -92,11 +92,11 @@ Use o arquivo `Insomnia_2020-10-20.json` diretório `extra/` para configurar o `
 
 ## Atualizações Futuras
 
-[ ] Adicionar rota para Exibir User
-[ ] Adicionar rota para atualizar avatar User
-[ ] Refatorar Arquitetura
-[ ] Padronizar retornos de erros
-[ ] Adicionar ORM
-[ ] Adicinar Depenicais Injection (Containers)
+- [ ] Adicionar rota para Exibir User
+- [ ] Adicionar rota para atualizar avatar User
+- [ ] Refatorar Arquitetura
+- [ ] Padronizar retornos de erros
+- [ ] Adicionar ORM
+- [ ] Adicinar Depenicais Injection (Containers)
 
 
