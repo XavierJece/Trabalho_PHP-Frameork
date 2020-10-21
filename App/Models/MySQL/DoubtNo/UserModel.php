@@ -82,7 +82,7 @@ final class UserModel
     /**
      * @return string
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -93,6 +93,12 @@ final class UserModel
      */
     public function setPassword(string $password): self
     {
+        $this->password = $this->hashPassword($password);
+        return $this;
+    }
+
+    public function setHash(string $password): self
+    {
         $this->password = $password;
         return $this;
     }
@@ -100,7 +106,7 @@ final class UserModel
     /**
      * @return string
      */
-    public function getAvatar(): string
+    public function getAvatar(): ?string
     {
         return $this->avatar;
     }
@@ -109,9 +115,15 @@ final class UserModel
      * @param string $avatar
      * @return self
      */
-    public function setAvatar(string $avatar): self
+    public function setAvatar(string $avatar = null): self
     {
         $this->avatar = $avatar;
         return $this;
     }
+
+    private function hashPassword($password){
+        $options = ['cost' => 8];
+
+        return password_hash($password,  PASSWORD_BCRYPT, $options);
+      }
 }

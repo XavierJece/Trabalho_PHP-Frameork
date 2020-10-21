@@ -59,7 +59,7 @@ final class PostController
         $user = $userDAO->getById($userId);
 
         if (is_null($user)) {
-            return $response->withStatus(401);
+            return $response->withStatus(401)->withJson(['error' => 'Usuário não existe!']);
         }
 
         $post = new PostModel($data['doubt'], $user);

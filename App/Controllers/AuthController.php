@@ -20,11 +20,11 @@ final class AuthController
         $user = $userDAO->getByEmail($email);
 
         if (is_null($user)) {
-            return $response->withStatus(401);
+            return $response->withStatus(401)->withJson(['error' => 'Usuário não encontrado!']);
         }
 
         if (!password_verify($password, $user->getPassword())) {
-            return $response->withStatus(401);
+            return $response->withStatus(401)->withJson(['error' => 'Email ou senha inválidos!']);
         }
 
         $tokenPayload = [
@@ -37,13 +37,14 @@ final class AuthController
         $token = JWT::encode($tokenPayload, getenv('JWT_SECRET_KEY'));
 
         $response = $response->withJson([
-            "token" => $token,
             "user" => [
                 "id" => $user->getId(),
                 "email" => $user->getEmail(),
                 "name" => $user->getName(),
                 "avatar" =>$user->getAvatar()
-            ]
+            ],
+            "token" => $token
+
         ]);
 
         return $response;
